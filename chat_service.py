@@ -52,6 +52,8 @@ def send_chainlit_message(content: str):
 async def handle_message(message: cl.Message):
     flask_port = os.getenv("FLASK_PORT", "5000")
     url = f"http://localhost:{flask_port}/chat"
+
+    timeout = httpx.Timeout(read=30.0, connect=5.0)
     async with httpx.AsyncClient() as client:
         resp = await client.post(url, json={"message": message.content})
         data = resp.json()
